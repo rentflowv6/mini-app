@@ -12,7 +12,7 @@
     <style>
       :root {
         --bg: #0a0e0a; --bg2: #0d1110; --card: #0f1411; --card2: #1b241e;
-        --text: #e4edf7; --muted: #7a867d; --brand: #27bd89;
+        --text: #e4edf7; --muted: #a2b0a8; --brand: #27bd89;
         --brand-bright: #39e6a6; --brand-dim: #0b6a40; --teal: #4fd6c8;
         --amber: #ffc24b; --red: #ff5c6a; --blue: #4f8cff; --purple: #a78bfa;
         --border: #1c241e;
@@ -25,6 +25,7 @@
         min-height:100vh; padding:calc(16px + var(--sat)) 16px calc(16px + var(--sab));
         -webkit-tap-highlight-color:transparent; }
       .wrap { max-width:520px; margin:0 auto; }
+      #app { overflow-y:auto; -webkit-overflow-scrolling:touch; }
       header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
       header .logo { display:flex; align-items:center; gap:10px; }
       header .logo .mark { width:36px; height:36px; border-radius:10px;
@@ -56,9 +57,33 @@
       .svc-item:last-child { border-bottom:none; }
       .svc-item .name { color:var(--muted); font-family:monospace; font-size:12px; }
       .svc-item .state { font-size:12px; font-weight:600; }
-      .models { display:grid; grid-template-columns:1fr 1fr; gap:8px; max-height:180px; overflow-y:auto; }
+      .models { display:grid; grid-template-columns:1fr 1fr; gap:8px; max-height:220px; overflow-y:auto; }
       .model-chip { background:var(--card2); border:1px solid var(--border); border-radius:10px;
-        padding:8px 10px; font-size:12px; font-family:monospace; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        padding:10px; display:flex; flex-direction:column; gap:6px; }
+      .model-chip .mc-id { font-size:12px; font-family:monospace; font-weight:600; color:var(--text);
+        overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .model-chip .mc-badges { display:flex; align-items:center; justify-content:space-between; gap:6px; }
+      .model-chip .mc-owned { font-size:10px; font-weight:700; color:var(--teal); text-transform:uppercase;
+        letter-spacing:.4px; background:rgba(79,214,200,.1); border:1px solid rgba(79,214,200,.25);
+        padding:1px 7px; border-radius:20px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .model-chip .mc-avail .dot { margin-right:0; }
+      .model-chip .mc-created { font-size:9px; color:var(--muted); font-family:monospace; }
+      /* Fleet job timeline */
+      .fleet-timeline { position:relative; padding-left:20px; }
+      .fleet-timeline::before { content:''; position:absolute; left:5px; top:4px; bottom:4px;
+        width:2px; background:var(--border); border-radius:2px; }
+      .fl-item { position:relative; margin-bottom:14px; }
+      .fl-line { position:relative; }
+      .fl-dot { position:absolute; left:-20px; top:4px; width:12px; height:12px; border-radius:50%;
+        background:var(--brand); border:2px solid var(--bg); box-shadow:0 0 0 2px var(--brand-dim); }
+      .fl-body { background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:9px 11px; }
+      .fl-title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:5px; word-break:break-word; }
+      .fl-jid { font-family:monospace; font-size:10px; }
+      .fl-meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+      .fl-assignee { font-size:11px; color:var(--text); font-weight:600; }
+      .fl-status { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.4px;
+        padding:1px 8px; border-radius:20px; border:1px solid; }
+      .fl-ts { font-size:10px; font-family:monospace; }
       footer { text-align:center; color:var(--muted); font-size:11px; margin-top:16px; letter-spacing:.3px; }
       .btn { width:100%; padding:14px; margin-top:14px;
         background:linear-gradient(90deg,var(--brand),var(--teal)); color:#04150e;
@@ -89,7 +114,7 @@
       .fld textarea { resize:vertical; }
       .fmsg { font-size:12px; min-height:18px; text-align:center; }
     </style>
-    <script type="module" crossorigin src="./assets/index-BU2SVtJ0.js"></script>
+    <script type="module" crossorigin src="./assets/index-D5FrcYyV.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-VuZ1I4Wn.css">
   </head>
   <body>

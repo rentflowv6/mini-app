@@ -35,10 +35,30 @@
       header h1 { font-size:20px; font-weight:800; letter-spacing:1px; }
       header .badge { font-size:11px; color:var(--brand-bright); background:rgba(39,189,137,0.12);
         padding:4px 10px; border-radius:20px; border:1px solid rgba(39,189,137,0.35); font-weight:600; }
-      .tabbar { display:flex; gap:6px; margin-bottom:14px; }
-      .tab { flex:1; padding:9px; background:var(--card); color:var(--muted);
-        border:1px solid var(--border); border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; text-align:center; }
-      .tab.active { background:var(--card2); color:var(--brand-bright); border-color:var(--brand-dim); }
+      /* Side nav drawer */
+      #navToggle { flex:0 0 auto; width:38px; height:38px; border-radius:10px; background:var(--card);
+        border:1px solid var(--border); color:var(--text); font-size:19px; line-height:1;
+        cursor:pointer; display:flex; align-items:center; justify-content:center; }
+      #navToggle:active { background:var(--card2); }
+      #sideNav { position:fixed; top:0; left:0; width:260px; height:100dvh;
+        background:linear-gradient(180deg,#0b0f0b 0%,#070a08 100%);
+        border-right:1px solid var(--border); z-index:120; transform:translateX(-100%);
+        transition:transform .2s ease; display:flex; flex-direction:column;
+        padding:calc(20px + var(--sat)) 12px calc(16px + var(--sab)); }
+      #sideNav.open { transform:translateX(0); }
+      #sideNav .nav-brand { display:flex; align-items:center; gap:10px; padding:4px 8px 16px; border-bottom:1px solid var(--border); margin-bottom:10px; }
+      #sideNav .nav-brand h2 { font-size:16px; font-weight:800; letter-spacing:1px; }
+      #navBackdrop { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:110;
+        opacity:0; pointer-events:none; transition:opacity .2s ease; }
+      #navBackdrop.open { opacity:1; pointer-events:auto; }
+      .nav-item { display:flex; align-items:center; gap:12px; padding:12px 12px;
+        border-radius:10px; font-size:14px; font-weight:600; color:var(--muted);
+        cursor:pointer; border:1px solid transparent; }
+      .nav-item .nic { font-size:18px; width:22px; text-align:center; }
+      .nav-item.active { background:var(--card2); color:var(--brand-bright); border-color:var(--brand-dim); }
+      .nav-item:active { background:var(--card2); }
+      .nav-live { margin-top:auto; padding-top:14px; border-top:1px solid var(--border);
+        display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); }
       .grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
       .tile { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; text-align:center; }
       .tile .label { font-size:11px; color:var(--muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.5px; }
@@ -114,26 +134,33 @@
       .fld textarea { resize:vertical; }
       .fmsg { font-size:12px; min-height:18px; text-align:center; }
     </style>
-    <script type="module" crossorigin src="./assets/index-BWcYGjCp.js"></script>
+    <script type="module" crossorigin src="./assets/index-DgGiiBub.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-VuZ1I4Wn.css">
   </head>
   <body>
     <div class="wrap">
       <header>
+        <button id="navToggle" aria-label="Open menu">☰</button>
         <div class="logo"><div class="mark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-label="Hestia hearth flame"><circle cx="12" cy="12" r="11" stroke="#b5791f" stroke-width="1.6" opacity="0.9"/><path d="M12 4.5 C8.5 8.5 7 11 7 13.8 A5 5 0 0 0 17 13.8 C17 11 15.5 8.5 12 4.5Z" fill="#f5b942"/><path d="M12 9 C10.4 10.8 10 12.2 10 13.5 A2.3 2.3 0 0 0 14 13.5 C14 12.2 13.6 10.8 12 9Z" fill="#e8892b"/><ellipse cx="12" cy="15.3" rx="1.1" ry="1.4" fill="#c96a1d"/></svg></div><h1>GOD SPEED</h1></div>
         <span class="badge" id="liveBadge">…</span>
       </header>
-      <div class="tabbar">
-        <div class="tab active" data-tab="overview">Overview</div>
-        <div class="tab" data-tab="models">Models</div>
-        <div class="tab" data-tab="relay">Relay</div>
-        <div class="tab" data-tab="osint">OSINT</div>
-        <div class="tab" data-tab="ingest">Ingest</div>
-        <div class="tab" data-tab="system">System</div>
-        <div class="tab" data-tab="logs">Logs</div>
-      </div>
       <div id="app"><div class="loading">Loading…</div></div>
     </div>
+    <div id="navBackdrop"></div>
+    <nav id="sideNav">
+      <div class="nav-brand">
+        <div class="mark" style="width:30px;height:30px;border-radius:8px;background:radial-gradient(circle at 50% 38%, #3a2410 0%, #2a1a0a 55%, #1a1006 100%);border:1px solid #5c3d14;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-label="Hestia hearth flame"><circle cx="12" cy="12" r="11" stroke="#b5791f" stroke-width="1.6" opacity="0.9"/><path d="M12 4.5 C8.5 8.5 7 11 7 13.8 A5 5 0 0 0 17 13.8 C17 11 15.5 8.5 12 4.5Z" fill="#f5b942"/><path d="M12 9 C10.4 10.8 10 12.2 10 13.5 A2.3 2.3 0 0 0 14 13.5 C14 12.2 13.6 10.8 12 9Z" fill="#e8892b"/><ellipse cx="12" cy="15.3" rx="1.1" ry="1.4" fill="#c96a1d"/></svg></div>
+        <h2>GOD SPEED</h2>
+      </div>
+      <div class="nav-item active" data-tab="overview"><span class="nic">🏠</span>Overview</div>
+      <div class="nav-item" data-tab="models"><span class="nic">🧠</span>Models</div>
+      <div class="nav-item" data-tab="relay"><span class="nic">🤖</span>Relay</div>
+      <div class="nav-item" data-tab="osint"><span class="nic">🔎</span>OSINT</div>
+      <div class="nav-item" data-tab="ingest"><span class="nic">📥</span>Ingest</div>
+      <div class="nav-item" data-tab="system"><span class="nic">🖥️</span>System</div>
+      <div class="nav-item" data-tab="logs"><span class="nic">📜</span>Logs</div>
+      <div class="nav-live"><span class="dot" style="background:var(--brand-bright)"></span><span id="navLiveText">live</span></div>
+    </nav>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
   </body>
 </html>

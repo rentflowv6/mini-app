@@ -8,7 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <title>Godspeed · Control</title>
+    <title>GOD SPEED · Control</title>
     <style>
       :root {
         --bg: #0a0e0a; --bg2: #0d1110; --card: #0f1411; --card2: #1b241e;
@@ -27,10 +27,11 @@
       .wrap { max-width:520px; margin:0 auto; }
       header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
       header .logo { display:flex; align-items:center; gap:10px; }
-      header .logo .mark { width:34px; height:34px; border-radius:9px;
-        background:linear-gradient(135deg,var(--brand),var(--teal));
-        display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; }
-      header h1 { font-size:20px; font-weight:700; letter-spacing:.3px; }
+      header .logo .mark { width:36px; height:36px; border-radius:10px;
+        background:radial-gradient(circle at 50% 38%, #3a2410 0%, #2a1a0a 55%, #1a1006 100%);
+        border:1px solid #5c3d14;
+        display:flex; align-items:center; justify-content:center; }
+      header h1 { font-size:20px; font-weight:800; letter-spacing:1px; }
       header .badge { font-size:11px; color:var(--brand-bright); background:rgba(39,189,137,0.12);
         padding:4px 10px; border-radius:20px; border:1px solid rgba(39,189,137,0.35); font-weight:600; }
       .tabbar { display:flex; gap:6px; margin-bottom:14px; }
@@ -88,19 +89,21 @@
       .fld textarea { resize:vertical; }
       .fmsg { font-size:12px; min-height:18px; text-align:center; }
     </style>
-    <script type="module" crossorigin src="./assets/index-DcyGDzzd.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-D1fJFTh1.css">
+    <script type="module" crossorigin src="./assets/index-rSaDI_PG.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-SLhPpbPf.css">
   </head>
   <body>
     <div class="wrap">
       <header>
-        <div class="logo"><div class="mark">⚡</div><h1>Godspeed Control</h1></div>
+        <div class="logo"><div class="mark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-label="Hestia hearth flame"><circle cx="12" cy="12" r="11" stroke="#b5791f" stroke-width="1.6" opacity="0.9"/><path d="M12 4.5 C8.5 8.5 7 11 7 13.8 A5 5 0 0 0 17 13.8 C17 11 15.5 8.5 12 4.5Z" fill="#f5b942"/><path d="M12 9 C10.4 10.8 10 12.2 10 13.5 A2.3 2.3 0 0 0 14 13.5 C14 12.2 13.6 10.8 12 9Z" fill="#e8892b"/><ellipse cx="12" cy="15.3" rx="1.1" ry="1.4" fill="#c96a1d"/></svg></div><h1>GOD SPEED</h1></div>
         <span class="badge" id="liveBadge">…</span>
       </header>
       <div class="tabbar">
         <div class="tab active" data-tab="overview">Overview</div>
         <div class="tab" data-tab="models">Models</div>
         <div class="tab" data-tab="relay">Relay</div>
+        <div class="tab" data-tab="osint">OSINT</div>
+        <div class="tab" data-tab="ingest">Ingest</div>
         <div class="tab" data-tab="system">System</div>
         <div class="tab" data-tab="logs">Logs</div>
       </div>

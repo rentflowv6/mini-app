@@ -1,7 +1,7 @@
 {
-  "name": "Godspeed Control",
-  "short_name": "Godspeed",
-  "description": "Live control panel for the Godspeed fleet",
+  "name": "GOD SPEED Control",
+  "short_name": "GOD SPEED",
+  "description": "Live control panel for the GOD SPEED fleet",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0e0a",

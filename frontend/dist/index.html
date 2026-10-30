@@ -77,6 +77,32 @@
       .svc-item:last-child { border-bottom:none; }
       .svc-item .name { color:var(--muted); font-family:monospace; font-size:12px; }
       .svc-item .state { font-size:12px; font-weight:600; }
+      /* On/off toggle switch for service control */
+      .svc-right { display:flex; align-items:center; gap:10px; }
+      .switch { position:relative; width:42px; height:24px; flex:0 0 auto;
+        border-radius:20px; background:var(--bg2); border:1px solid var(--border);
+        cursor:pointer; transition:background .15s, border-color .15s; -webkit-tap-highlight-color:transparent; }
+      .switch::after { content:''; position:absolute; top:2px; left:2px; width:18px; height:18px;
+        border-radius:50%; background:var(--muted); transition:transform .15s ease, background .15s; }
+      .switch.on { background:rgba(39,189,137,.18); border-color:var(--brand-dim); }
+      .switch.on::after { transform:translateX(18px); background:var(--brand-bright); }
+      .switch.busy { opacity:.55; pointer-events:none; }
+      .switch.disabled { opacity:.35; cursor:not-allowed; }
+      .switch.disabled::after { background:var(--muted); }
+      .svc-lock { font-size:11px; color:var(--muted); }
+      /* Pipeline stages */
+      .pl-chain { display:flex; flex-direction:column; gap:6px; margin:10px 0; }
+      .pl-stage { display:flex; align-items:center; gap:8px; padding:6px 10px;
+        background:var(--card2); border:1px solid var(--border); border-radius:8px; }
+      .pl-stage-idx { width:22px; height:22px; border-radius:6px; background:var(--brand-dim);
+        color:var(--brand-bright); font-size:12px; font-weight:700; display:flex;
+        align-items:center; justify-content:center; flex:0 0 auto; }
+      .pl-stage-role { font-size:13px; font-weight:600; }
+      .pl-stage-agent { font-size:11px; font-family:monospace; }
+      .btn-mini { padding:6px 12px; font-size:12px; font-weight:600; border-radius:8px;
+        background:var(--card2); border:1px solid var(--brand-dim); color:var(--brand-bright);
+        cursor:pointer; margin-left:auto; }
+      .btn-mini:active { background:var(--brand-dim); }
       .models { display:grid; grid-template-columns:1fr 1fr; gap:8px; max-height:220px; overflow-y:auto; }
       .model-chip { background:var(--card2); border:1px solid var(--border); border-radius:10px;
         padding:10px; display:flex; flex-direction:column; gap:6px; }
@@ -138,7 +164,7 @@
       .fld textarea { resize:vertical; }
       .fmsg { font-size:12px; min-height:18px; text-align:center; }
     </style>
-    <script type="module" crossorigin src="./assets/index-CzCH5s0c.js"></script>
+    <script type="module" crossorigin src="./assets/index-D6Z6hScC.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-VuZ1I4Wn.css">
   </head>
   <body>
@@ -162,6 +188,7 @@
       <div class="nav-item" data-tab="osint"><span class="nic">🔎</span>OSINT</div>
       <div class="nav-item" data-tab="ingest"><span class="nic">📥</span>Ingest</div>
       <div class="nav-item" data-tab="system"><span class="nic">🖥️</span>System</div>
+      <div class="nav-item" data-tab="pipelines"><span class="nic">🔗</span>Pipelines</div>
       <div class="nav-item" data-tab="logs"><span class="nic">📜</span>Logs</div>
       <div class="nav-live"><span class="dot" style="background:var(--brand-bright)"></span><span id="navLiveText">live</span></div>
     </nav>

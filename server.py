@@ -13,6 +13,7 @@ import hashlib
 import hmac
 import json
 import os
+import urllib.error
 import urllib.request
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -73,6 +74,14 @@ class Handler(SimpleHTTPRequestHandler):
                 self.send_header("Content-Length", str(len(data)))
                 self.end_headers()
                 self.wfile.write(data)
+        except urllib.error.HTTPError as e:
+            # Backend responded with an error status — relay it as-is.
+            data = e.read()
+            self.send_response(e.code)
+            self.send_header("Content-Type", e.headers.get("Content-Type", "application/json"))
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
         except Exception as e:
             self._json({"error": "backend_unreachable", "detail": str(e)}, 502)
 

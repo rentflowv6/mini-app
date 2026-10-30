@@ -67,7 +67,7 @@ class Handler(SimpleHTTPRequestHandler):
                     body = self.rfile.read(length)
             req = urllib.request.Request(target, method=method, data=body)
             req.add_header("Content-Type", self.headers.get("Content-Type", "application/json"))
-            with urllib.request.urlopen(req, timeout=12) as r:
+            with urllib.request.urlopen(req, timeout=65) as r:
                 data = r.read()
                 self.send_response(r.status)
                 self.send_header("Content-Type", r.headers.get("Content-Type", "application/json"))

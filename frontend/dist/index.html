@@ -2,18 +2,28 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0e0a" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>Godspeed · Control</title>
     <style>
       :root {
         --bg: #0a0e0a; --bg2: #0d1110; --card: #0f1411; --card2: #1b241e;
         --text: #e4edf7; --muted: #7a867d; --brand: #27bd89;
         --brand-bright: #39e6a6; --brand-dim: #0b6a40; --teal: #4fd6c8;
-        --amber: #ffc24b; --red: #ff5c6a; --border: #1c241e;
+        --amber: #ffc24b; --red: #ff5c6a; --blue: #4f8cff; --purple: #a78bfa;
+        --border: #1c241e;
+        --sat: env(safe-area-inset-top, 0px);
+        --sab: env(safe-area-inset-bottom, 0px);
       }
       * { margin:0; padding:0; box-sizing:border-box; }
       body { font-family:"Inter",-apple-system,"Segoe UI",Roboto,sans-serif;
-        background:linear-gradient(180deg,var(--bg) 0%,#060a08 100%); color:var(--text); min-height:100vh; padding:16px; }
+        background:linear-gradient(180deg,var(--bg) 0%,#060a08 100%); color:var(--text);
+        min-height:100vh; padding:calc(16px + var(--sat)) 16px calc(16px + var(--sab));
+        -webkit-tap-highlight-color:transparent; }
       .wrap { max-width:520px; margin:0 auto; }
       header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
       header .logo { display:flex; align-items:center; gap:10px; }
@@ -54,8 +64,19 @@
         border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; }
       .btn:active { transform:scale(.98); }
       .loading { text-align:center; color:var(--muted); padding:40px 0; }
+      /* Mini Apps 2.0: colored quick-action buttons */
+      .quickgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+      .quick { display:flex; align-items:center; gap:10px; padding:14px; border-radius:14px;
+        border:1px solid var(--border); cursor:pointer; font-weight:600; font-size:14px;
+        transition:transform .08s ease, opacity .15s; }
+      .quick:active { transform:scale(.96); opacity:.85; }
+      .quick.blue { background:linear-gradient(135deg,#123050,#0e1e3a); color:#cfe0ff; border-color:#1d3a66; }
+      .quick.green { background:linear-gradient(135deg,#0c3a28,#0a2419); color:#9ff0c9; border-color:#145a3a; }
+      .quick.purple { background:linear-gradient(135deg,#2a1a4d,#1a1030); color:#d8c7ff; border-color:#3d2670; }
+      .quick.amber { background:linear-gradient(135deg,#3a2a08,#2a1d05); color:#ffe4a3; border-color:#5c4712; }
+      .quick .qic { font-size:20px; }
     </style>
-    <script type="module" crossorigin src="./assets/index-C8A-HyMP.js"></script>
+    <script type="module" crossorigin src="./assets/index-9YClS0vO.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-D1fJFTh1.css">
   </head>
   <body>
@@ -73,5 +94,6 @@
       </div>
       <div id="app"><div class="loading">Loading…</div></div>
     </div>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
   </body>
 </html>

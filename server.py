@@ -57,8 +57,15 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({"error": "unauthorized"}, 401)
         base = LOCAL_TUNNEL or "http://127.0.0.1:8080"
         target = f"{base}{path}"
+        method = self.command or "GET"
         try:
-            req = urllib.request.Request(target, method="GET")
+            body = None
+            if method == "POST":
+                length = int(self.headers.get("Content-Length", 0) or 0)
+                if length > 0 and length <= 64 * 1024:
+                    body = self.rfile.read(length)
+            req = urllib.request.Request(target, method=method, data=body)
+            req.add_header("Content-Type", self.headers.get("Content-Type", "application/json"))
             with urllib.request.urlopen(req, timeout=12) as r:
                 data = r.read()
                 self.send_response(r.status)
@@ -78,6 +85,10 @@ class Handler(SimpleHTTPRequestHandler):
             if hmac.compare_digest(provided, PIN):
                 return self._json({"token": _token_for(PIN), "pin_set": True})
             return self._json({"error": "wrong_pin"}, 401)
+        if self.path.startswith("/api/"):
+            # Proxy other POSTs (e.g. fleet dispatch) through to the local
+            # backend, respecting the PIN gate.
+            return self._proxy_api(self.path)
         return self._json({"error": "not_found"}, 404)
 
     def do_GET(self):

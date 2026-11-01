@@ -151,7 +151,11 @@ class Handler(SimpleHTTPRequestHandler):
     def _proxy_api(self, path):
         if not self._authorized():
             return self._json({"error": "unauthorized"}, 401)
-        base = LOCAL_TUNNEL or "http://[2607:f2c0:e658:8ec:60d6:b2ff:fead:d526]:8080"
+        if not LOCAL_TUNNEL:
+            # No tunnel configured → cannot reach the local backend. Fail clean,
+            # never fall back to an unreachable hardcoded address.
+            return self._json({"error": "backend_unreachable", "detail": "no_tunnel_configured"}, 503)
+        base = LOCAL_TUNNEL.rstrip("/")
         target = f"{base}{path}"
         method = self.command or "GET"
         try:

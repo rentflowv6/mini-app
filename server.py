@@ -2,10 +2,10 @@
 """Render-hosted Mini App server (Telegram initData + PIN-gated).
 
 Serves the built frontend (static shell) AND proxies live /api/* calls to the
-local backend via the current Cloudflare quick-tunnel URL.
+local backend via the penguin-relay HTTP bridge (no Cloudflare tunnel).
 
-The tunnel URL comes from the LOCAL_TUNNEL_URL env var, kept current by the
-local self-heal script (backend/tunnel_selfheal.py).
+The relay bridge URL comes from the RELAY_HTTP_URL env var (e.g.
+https://penguin-relay-v2.onrender.com/relay/http).
 
 Auth has two primary paths:
   1. Telegram initData (preferred): when TELEGRAM_BOT_TOKEN is set, the
@@ -29,7 +29,7 @@ from pathlib import Path
 
 FRONTEND_DIR = Path(__file__).parent / "frontend" / "dist"
 PORT = int(os.environ.get("PORT", "10000"))
-LOCAL_TUNNEL = os.environ.get("LOCAL_TUNNEL_URL", "").rstrip("/")
+RELAY_HTTP_URL = os.environ.get("RELAY_HTTP_URL", "").rstrip("/")
 PIN = os.environ.get("MINI_APP_PIN", "")
 BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
 
@@ -151,12 +151,8 @@ class Handler(SimpleHTTPRequestHandler):
     def _proxy_api(self, path):
         if not self._authorized():
             return self._json({"error": "unauthorized"}, 401)
-        if not LOCAL_TUNNEL:
-            # No tunnel configured → cannot reach the local backend. Fail clean,
-            # never fall back to an unreachable hardcoded address.
-            return self._json({"error": "backend_unreachable", "detail": "no_tunnel_configured"}, 503)
-        base = LOCAL_TUNNEL.rstrip("/")
-        target = f"{base}{path}"
+        if not RELAY_HTTP_URL:
+            return self._json({"error": "backend_unreachable", "detail": "no_relay_configured"}, 503)
         method = self.command or "GET"
         try:
             body = None
@@ -164,9 +160,10 @@ class Handler(SimpleHTTPRequestHandler):
                 length = int(self.headers.get("Content-Length", 0) or 0)
                 if length > 0 and length <= 64 * 1024:
                     body = self.rfile.read(length)
-            req = urllib.request.Request(target, method=method, data=body)
-            req.add_header("Content-Type", self.headers.get("Content-Type", "application/json"))
-            with urllib.request.urlopen(req, timeout=65) as r:
+            req = urllib.request.Request(RELAY_HTTP_URL + path, method=method, data=body)
+            ctype = self.headers.get("Content-Type", "application/json")
+            req.add_header("Content-Type", ctype)
+            with urllib.request.urlopen(req, timeout=70) as r:
                 data = r.read()
                 self.send_response(r.status)
                 self.send_header("Content-Type", r.headers.get("Content-Type", "application/json"))
@@ -174,7 +171,6 @@ class Handler(SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(data)
         except urllib.error.HTTPError as e:
-            # Backend responded with an error status — relay it as-is.
             data = e.read()
             self.send_response(e.code)
             self.send_header("Content-Type", e.headers.get("Content-Type", "application/json"))
@@ -215,9 +211,9 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({"telegram_auth_available": bool(BOT_TOKEN)})
         if self.path == "/config.json":
             # Return this Render origin so the frontend calls Render directly,
-            # no tunnel needed. The frontend runs here, so same-origin works.
+            # same-origin works. The backend bridge goes through the relay.
             origin = f"https://{self.headers.get('Host', 'mini-app-vpem.onrender.com')}"
-            return self._json({"tunnelUrl": origin})
+            return self._json({"tunnelUrl": origin, "originUrl": origin})
         if self.path.startswith("/api/"):
             return self._proxy_api(self.path)
         # Serve frontend static shell
@@ -252,7 +248,7 @@ class Handler(SimpleHTTPRequestHandler):
 def main():
     httpd = ThreadingHTTPServer(("0.0.0.0", PORT), Handler)
     print(
-        f"Mini App (Render) on :{PORT} tunnel={LOCAL_TUNNEL} "
+        f"Mini App (Render) on :{PORT} relay={RELAY_HTTP_URL or 'unset'} "
         f"pin_set={bool(PIN)} telegram_auth={bool(BOT_TOKEN)}",
         flush=True,
     )

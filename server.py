@@ -210,9 +210,10 @@ class Handler(SimpleHTTPRequestHandler):
         if self.path == "/api/auth/telegram":
             return self._json({"telegram_auth_available": bool(BOT_TOKEN)})
         if self.path == "/config.json":
-            # Return the tunnel URL so the frontend can connect directly,
-            # bypassing this proxy (Render DNS can't resolve trycloudflare.com).
-            return self._json({"tunnelUrl": LOCAL_TUNNEL})
+            # Return this Render origin so the frontend calls Render directly,
+            # no tunnel needed. The frontend runs here, so same-origin works.
+            origin = f"https://{self.headers.get('Host', 'mini-app-vpem.onrender.com')}"
+            return self._json({"tunnelUrl": origin})
         if self.path.startswith("/api/"):
             return self._proxy_api(self.path)
         # Serve frontend static shell

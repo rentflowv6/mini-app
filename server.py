@@ -151,7 +151,7 @@ class Handler(SimpleHTTPRequestHandler):
     def _proxy_api(self, path):
         if not self._authorized():
             return self._json({"error": "unauthorized"}, 401)
-        base = LOCAL_TUNNEL or "http://127.0.0.1:8080"
+        base = LOCAL_TUNNEL or "http://[2607:f2c0:e658:8ec:60d6:b2ff:fead:d526]:8080"
         target = f"{base}{path}"
         method = self.command or "GET"
         try:

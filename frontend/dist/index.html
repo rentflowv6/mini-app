@@ -11,18 +11,58 @@
     <title>GOD SPEED · Control</title>
     <style>
       :root {
-        --bg: #0a0e0a; --bg2: #0d1110; --card: #0f1411; --card2: #1b241e;
-        --text: #e4edf7; --muted: #a2b0a8; --brand: #27bd89;
-        --brand-bright: #39e6a6; --brand-dim: #0b6a40; --teal: #4fd6c8;
-        --amber: #ffc24b; --red: #ff5c6a; --blue: #4f8cff; --purple: #a78bfa;
-        --gold: #d4af37; --gold-soft: #d4b886; --cyan: #22d3ee;
-        --border: #1c241e;
+        --bg: #090d0a; --bg2: #0c120e; --card: #101a13; --card2: #18231d;
+        --text: #eef3ea; --muted: #c5d1c9;
+        --brand: #2ea37c;            /* deep emerald green */
+        --brand-bright: #46e0a8;     /* bright mint-emerald */
+        --brand-dim: #0b5639;        /* dark emerald */
+        --teal: #4fd6c8;
+        --amber: #ffd77a;
+        --gold: #d4af37;             /* gold — now primary accent */
+        --gold-soft: #e8cf8f;
+        --red: #ff5c6a; --blue: #4f8cff; --purple: #a78bfa;
+        --cyan: #22d3ee;
+        --border: #23352a;
+        --bg-image: url('./assets/bg-green-gold-BUGufg_O.png');
         --sat: env(safe-area-inset-top, 0px);
         --sab: env(safe-area-inset-bottom, 0px);
+        /* ── Olympus semantic token layer (Stage 1) ── */
+        --ol-bg: #090d0a;          /* = --bg */
+        --ol-bg2: #0c120e;         /* = --bg2 */
+        --ol-card: #101a13;        /* = --card */
+        --ol-card2: #18231d;       /* = --card2 */
+        --ol-line: #23352a;        /* = --border */
+        --ol-ivory: #f2ecdf;       /* classical ivory */
+        --ol-muted: #c5d1c9;       /* = --muted */
+        --ol-gold: #d4af37;        /* = --gold (antique gold accent) */
+        --ol-gold-soft: #e8cf8f;  /* = --gold-soft */
+        --ol-emerald: #2ea37c;     /* = --brand */
+        --ol-amber: #d97728;       /* amber */
+        --ol-crimson: #a31d2f;     /* crimson */
+        --ol-highlight: #46e0a8;  /* = --brand-bright */
+        /* fonts */
+        --font-display: 'Nimbus Roman','Liberation Serif',Georgia,serif;
+        --font-body: 'Inter',system-ui,sans-serif;
+        --font-mono: ui-monospace,monospace;
+        /* type scale */
+        --ts-hero: 21px;
+        --ts-title: 20px;
+        --ts-h2: 16px;
+        --ts-body: 14px;
+        --ts-small: 12px;
+        --ts-micro: 10.5px;
+        /* radii */
+        --radius: 14px;
+        --radius-sm: 10px;
+        --radius-lg: 16px;
       }
       * { margin:0; padding:0; box-sizing:border-box; }
       body { font-family:"Inter",-apple-system,"Segoe UI",Roboto,sans-serif;
-        background:linear-gradient(180deg,var(--bg) 0%,#060a08 100%); color:var(--text);
+        background:linear-gradient(180deg,var(--bg) 0%,#060a08 100%), var(--bg-image);
+        background-size:cover, cover; background-position:center, center;
+        background-attachment:fixed, fixed;
+        color:var(--text);
+        font-size:var(--ts-body,14px);
         height:100dvh; overflow:hidden;
         padding:calc(16px + var(--sat)) 16px calc(16px + var(--sab));
         -webkit-tap-highlight-color:transparent; }
@@ -33,13 +73,13 @@
       header .logo .mark { width:38px; height:38px; border-radius:11px;
         background:linear-gradient(135deg, #182a22, #0f1a16);
         border:1.5px solid var(--gold);
-        box-shadow:0 0 16px rgba(212,175,55,.28), inset 0 0 10px rgba(212,175,55,.08);
+        box-shadow:0 0 16px rgba(229,197,120,.22), inset 0 0 10px rgba(212,175,55,.08);
         display:flex; align-items:center; justify-content:center;
         color:var(--gold); font-weight:800; font-size:18px; position:relative; }
       header .logo .mark::after { content:''; position:absolute; inset:4px; border-radius:7px;
         border:1px solid rgba(212,175,55,.35); }
       header h1 { font-size:20px; font-weight:800; letter-spacing:1px; }
-      header .badge { font-size:11px; color:var(--brand-bright); background:rgba(39,189,137,0.12);
+      header .badge { font-size:11px; color:var(--gold-soft); background:rgba(212,175,55,0.12);
         padding:4px 10px; border-radius:20px; border:1px solid rgba(39,189,137,0.35); font-weight:600; }
       /* Side nav drawer */
       #navToggle { flex:0 0 auto; width:38px; height:38px; border-radius:10px; background:var(--card);
@@ -53,6 +93,7 @@
         padding:calc(20px + var(--sat)) 12px calc(16px + var(--sab)); }
       #sideNav.open { transform:translateX(0); }
       #sideNav .nav-brand { display:flex; align-items:center; gap:10px; padding:4px 8px 16px; border-bottom:1px solid var(--border); margin-bottom:10px; }
+      #sideNav .nav-scroll { flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-right:4px; min-height:0; }
       #sideNav .nav-brand h2 { font-size:16px; font-weight:800; letter-spacing:1px; }
       #navBackdrop { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:110;
         opacity:0; pointer-events:none; transition:opacity .2s ease; }
@@ -78,7 +119,7 @@
       .card .row { display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px; }
       .card .row .muted { color:var(--muted); }
       .bar { height:8px; background:var(--bg2); border-radius:6px; overflow:hidden; }
-      .bar-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,var(--brand),var(--teal)); }
+      .bar-fill { height:100%; border-radius:6px; background:linear-gradient(135deg,#e5c578 0%,#d4af37 100%); color:#0c120e; }
       .bar-fill.amber { background:linear-gradient(90deg,var(--amber),#ffd77a); }
       .svc { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:4px 16px; }
       .svc-item { display:flex; justify-content:space-between; align-items:center;
@@ -118,8 +159,8 @@
       .model-chip .mc-id { font-size:12px; font-family:monospace; font-weight:600; color:var(--text);
         overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
       .model-chip .mc-badges { display:flex; align-items:center; justify-content:space-between; gap:6px; }
-      .model-chip .mc-owned { font-size:10px; font-weight:700; color:var(--teal); text-transform:uppercase;
-        letter-spacing:.4px; background:rgba(79,214,200,.1); border:1px solid rgba(79,214,200,.25);
+      .model-chip .mc-owned { font-size:10px; font-weight:700; color:var(--gold-soft); text-transform:uppercase;
+        letter-spacing:.4px; background:rgba(212,175,55,.12); border:1px solid rgba(212,175,55,.25);
         padding:1px 7px; border-radius:20px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
       .model-chip .mc-avail .dot { margin-right:0; }
       .model-chip .mc-created { font-size:9px; color:var(--muted); font-family:monospace; }
@@ -145,7 +186,7 @@
       .fleet-timeline { max-height:52vh; overflow-y:auto; padding-right:4px; }
       footer { text-align:center; color:var(--muted); font-size:11px; margin-top:16px; letter-spacing:.3px; }
       .btn { width:100%; padding:14px; margin-top:14px;
-        background:linear-gradient(90deg,var(--brand),var(--teal)); color:#04150e;
+        background:linear-gradient(135deg,#e5c578 0%,#d4af37 100%); color:#0c120e;
         border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; }
       .btn:active { transform:scale(.98); }
       .loading { text-align:center; color:var(--muted); padding:40px 0; }
@@ -179,7 +220,7 @@
       .chat-msg { max-width:82%; padding:10px 13px; border-radius:14px; font-size:14px;
         line-height:1.45; white-space:pre-wrap; word-break:break-word; animation:fadeUp .15s ease; }
       @keyframes fadeUp { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
-      .chat-msg.user { align-self:flex-end; background:linear-gradient(135deg,var(--brand),var(--teal));
+      .chat-msg.user { align-self:flex-end; background:linear-gradient(135deg,#e5c578 0%,#d4af37 100%); color:#0c120e;
         color:#04150e; border-bottom-right-radius:4px; font-weight:500; }
       .chat-msg.bot { align-self:flex-start; background:var(--card2); border:1px solid var(--border);
         color:var(--text); border-bottom-left-radius:4px; }
@@ -193,7 +234,7 @@
         font-family:inherit; resize:none; max-height:96px; }
       .chat-input:focus { outline:none; border-color:var(--brand-dim); }
       .chat-send { flex:0 0 auto; width:46px; height:46px; border-radius:12px; border:none;
-        background:linear-gradient(135deg,var(--brand),var(--teal)); color:#04150e;
+        background:linear-gradient(135deg,#e5c578 0%,#d4af37 100%); color:#0c120e;
         font-size:18px; font-weight:700; cursor:pointer; align-self:flex-end; }
       .chat-send:active { transform:scale(.94); }
       .chat-send:disabled { opacity:.5; }
@@ -219,16 +260,16 @@
       .m-step .mn { display:block; font-size:11px; color:var(--gold); }
       .m-sep { color:var(--gold); font-weight:800; font-size:10px; flex:0 0 auto; }
       .mini-logohead { display:flex; align-items:center; gap:10px; }
-      .mini-logohead .ml { width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,#182a22,#0f1a16); border:1.5px solid var(--gold); color:var(--gold); font-weight:800; font-size:16px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 14px rgba(212,175,55,.25); }
+      .mini-logohead .ml { width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,#182a22,#0f1a16); border:1.5px solid var(--gold); color:var(--gold); font-weight:800; font-size:16px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 14px rgba(229,197,120,.22); }
       /* ── Hero banner ── */
       .hero { position:relative; overflow:hidden; border-radius:16px; padding:20px 18px; margin-bottom:14px;
-        background:linear-gradient(135deg, rgba(212,175,55,.14), rgba(139,92,246,.10) 45%, rgba(34,211,238,.10));
+        background:linear-gradient(135deg, rgba(212,175,55,.14), rgba(46,163,124,.10) 45%, rgba(70,224,168,.10));
         border:1px solid var(--line-bright); }
       .hero::before { content:''; position:absolute; top:-40px; right:-40px; width:140px; height:140px;
         border-radius:50%; background:radial-gradient(circle, rgba(212,175,55,.25), transparent 70%); }
-      .hero .hk { font-size:9.5px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); font-weight:800; margin-bottom:6px; }
+      .hero .hk { font-size:9.5px; letter-spacing:3px; text-transform:uppercase; color:var(--brand-bright); font-weight:800; margin-bottom:6px; }
       .hero .ht { font-size:21px; font-weight:800; letter-spacing:.5px; line-height:1.15; }
-      .hero .ht em { font-style:normal; background:linear-gradient(120deg, var(--gold), var(--purple)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+      .hero .ht em { font-style:normal; background:linear-gradient(120deg, var(--gold), var(--brand-bright)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
       .hero .hs { font-size:12px; color:var(--muted); margin-top:6px; }
       /* Notification bell + panel */
       .notif-bell { position:relative; flex:0 0 auto; width:34px; height:34px; margin-left:6px; border-radius:10px;
@@ -275,13 +316,130 @@
         border-radius:8px; padding:8px; font-family:ui-monospace,monospace; font-size:11px; white-space:pre-wrap;
         overflow-x:auto; margin:4px 0; }
       .chat-msg.bot a { color:var(--brand-bright); text-decoration:underline; }
-      .chat-msg.bot a:visited { color:var(--purple); }
+      .chat-msg.bot a:visited { color:var(--brand-bright); }
       .chat-retry { margin-top:6px; font-size:11px; background:var(--card); border:1px solid var(--border);
         color:var(--text); border-radius:8px; padding:4px 10px; cursor:pointer; }
+      /* ── Soft chat polish ── */
+      .chat-wrap { position:relative; }
+      .chat-header { display:flex; align-items:center; gap:8px; padding:8px 6px 10px;
+        border-bottom:1px solid var(--border); margin-bottom:6px; }
+      .chat-header .ch-avatar { width:30px; height:30px; border-radius:50%;
+        background:linear-gradient(135deg,#e5c578 0%,#d4af37 100%); color:#0c120e; display:flex;
+        align-items:center; justify-content:center; font-size:15px; color:#04150e; font-weight:800; }
+      .chat-header .ch-name { font-size:13px; font-weight:800; letter-spacing:.5px; }
+      .chat-header .ch-status { font-size:10px; color:var(--brand-bright); opacity:.85; }
+      .chat-tools { display:flex; align-items:center; gap:6px; padding:6px 4px 2px; flex-wrap:wrap; }
+      .chat-model { font-family:inherit; font-size:11px; background:var(--card); color:var(--text);
+        border:1px solid var(--border); border-radius:8px; padding:5px 8px; max-width:160px; cursor:pointer; appearance:auto; }
+      .chat-clear { font-size:11px; color:var(--muted); background:none; border:none; cursor:pointer; margin-left:auto; }
+      .chat-clear:hover { color:var(--red); }
+      .chat-chips { display:flex; gap:5px; padding:2px 4px 8px; flex-wrap:wrap; }
+      .chat-chip { font-size:10.5px; background:var(--card); border:1px solid var(--border); color:var(--text);
+        border-radius:14px; padding:3px 10px; cursor:pointer; transition:background .12s,border-color .12s; }
+      .chat-chip:hover { background:var(--card2); border-color:var(--brand-dim); }
+      .chat-log { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;
+        padding:6px 2px; -webkit-overflow-scrolling:touch; scroll-behavior:smooth; }
+      .chat-msg { max-width:82%; padding:10px 13px; border-radius:16px; font-size:13.5px;
+        line-height:1.5; white-space:pre-wrap; word-break:break-word; animation:fadeUp .18s ease;
+        position:relative; }
+      .chat-msg.user { align-self:flex-end; background:linear-gradient(135deg,#e5c578 0%,#d4af37 100%); color:#0c120e;
+        color:#04150e; border-bottom-right-radius:4px; font-weight:500; }
+      .chat-msg.bot { align-self:flex-start; background:var(--card2); border:1px solid var(--border);
+        color:var(--text); border-bottom-left-radius:4px; }
+      .chat-msg .cm-model { display:block; font-size:9px; color:var(--gold); margin-top:5px;
+        letter-spacing:.4px; opacity:.9; }
+      .chat-msg .cm-time { display:block; font-size:9px; color:var(--muted); margin-top:2px; opacity:.7; }
+      .chat-msg.err { align-self:flex-start; background:rgba(255,92,106,.08); border:1px solid rgba(255,92,106,.25);
+        color:var(--red); }
+      .chat-msg.pending { opacity:.7; }
+      .chat-input-row { display:flex; gap:8px; padding-top:10px; border-top:1px solid var(--border); }
+      .chat-input { flex:1; padding:11px 14px; font-size:14px; color:var(--text);
+        background:var(--card2); border:1px solid var(--border); border-radius:12px;
+        font-family:inherit; resize:none; max-height:96px; transition:border-color .15s; }
+      .chat-input:focus { outline:none; border-color:var(--brand-dim); }
+      .chat-send { flex:0 0 auto; width:44px; height:44px; border-radius:12px; border:none;
+        background:linear-gradient(135deg,#e5c578 0%,#d4af37 100%); color:#0c120e;
+        font-size:17px; font-weight:700; cursor:pointer; align-self:flex-end;
+        transition:transform .1s,opacity .15s; }
+      .chat-send:active { transform:scale(.93); }
+      .chat-send:disabled { opacity:.45; cursor:not-allowed; }
+      .chat-hint { font-size:12px; color:var(--muted); text-align:center; padding:10px 0 4px; }
+      .typing-dots { display:flex; gap:4px; padding:6px 0; }
+      .typing-dots span { width:7px; height:7px; border-radius:50%; background:var(--muted);
+        animation:blink 1.2s infinite; }
+      .typing-dots span:nth-child(2) { animation-delay:.2s; }
+      .typing-dots span:nth-child(3) { animation-delay:.4s; }
+      @keyframes blink { 0%,80%,100%{opacity:.25} 40%{opacity:1} }
+      @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+      .chat-msg.bot .md-code { font-family:ui-monospace,monospace; font-size:11.5px; background:rgba(255,255,255,.06);
+        padding:1px 5px; border-radius:5px; }
+      .chat-msg.bot .md-pre { display:block; background:rgba(255,255,255,.05); border:1px solid var(--border);
+        border-radius:8px; padding:8px; font-family:ui-monospace,monospace; font-size:11px; white-space:pre-wrap;
+        overflow-x:auto; margin:4px 0; }
+      .chat-msg.bot a { color:var(--brand-bright); text-decoration:underline; }
+      .chat-msg.bot a:visited { color:var(--brand-bright); }
+      .chat-retry { margin-top:6px; font-size:11px; background:var(--card); border:1px solid var(--border);
+        color:var(--text); border-radius:8px; padding:4px 10px; cursor:pointer; }
+    /* ── Olympus Stage 2: serif display typography + classical accents ── */
+    /* Headings render in the serif display face for a classical feel.
+       Body/mono deliberately left as-is. */
+    h1, h2, h3, header h1, #sideNav .nav-brand h2,
+    .card h3, .hero .ht, .hero .hk,
+    .card-title, .tile-title, .tile .value, .chat-header .ch-name {
+      font-family:var(--font-display);
+      letter-spacing:.5px;
+    }
+    .hero .ht { font-size:var(--ts-hero); }
+    #sideNav .nav-brand h2 { font-size:var(--ts-h2); }
+    /* Greek-column accent: subtle vertical gold left-border on hero + primary cards */
+    .hero { border-left:4px solid var(--ol-gold); }
+    .card.primary { border-left:4px solid var(--ol-gold); }
+    /* Meander Greek-key motif across the header (pure CSS, no image) */
+    header { position:relative; }
+    header::after {
+      content:''; display:block; height:7px; margin-top:6px; opacity:.45;
+      background:
+        repeating-conic-gradient(from 0deg at 50% 0%, transparent 0 50%, var(--ol-gold) 50% 100%) 0 0 / 12px 3.5px,
+        repeating-conic-gradient(from 180deg at 50% 100%, var(--ol-gold) 0 50%, transparent 50% 100%) 0 3.5px / 12px 3.5px;
+    }
+    /* ── Responsive / tap‑feedback polish ── */
+    * { -webkit-tap-highlight-color:transparent; }
+    body { overscroll-behavior-y:contain; }
+    button, .quick, .tile, .nav-item, .cap-chip, .chat-chip, .switch, .notif-item,
+    .agent-card, .m-step, .model-chip, .fl-body, .svc-item, select, .btn-mini, .chat-send, .chat-retry {
+      touch-action:manipulation;
+    }
+    .btn:active, .quick:active, .cap-chip:active, .chat-chip:active,
+    .tile:active, .agent-card:active, .chat-send:active, .btn-mini:active {
+      transform:scale(.96);
+      filter:brightness(1.12);
+    }
+    .btn, .quick, .cap-chip, .chat-chip, .tile, .agent-card, .chat-send, .btn-mini, .switch {
+      transition:transform .08s ease, filter .12s ease, opacity .15s ease;
+    }
+    .chat-log, .fleet-timeline, .models, .logfeed { -webkit-overflow-scrolling:touch; }
+    @media (max-width:380px){
+      .grid { grid-template-columns:1fr 1fr; }
+      .caps-strip { grid-template-columns:repeat(2,1fr); }
+      header h1 { font-size:17px; }
+      .hero .ht { font-size:18px; }
+    }
+    @media (prefers-reduced-motion:reduce){
+      * { animation:none !important; transition:none !important; }
+    }
+    /* Provider health grid (Models tab) */
+    .prov-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    @media (max-width:380px){ .prov-grid { grid-template-columns:1fr; } }
+    /* Memory tab */
+    .mem-item { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; margin-bottom:10px; }
+    .mem-item .mem-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap:8px; }
+    .mem-item .mem-score { font-size:10px; font-weight:700; color:var(--brand-bright); flex:0 0 auto; }
+    .mem-item .mem-ts { font-size:10px; color:var(--muted); font-family:monospace; }
+    .mem-item .mem-text { font-size:12px; color:var(--text); line-height:1.45; word-break:break-word; }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script type="module" crossorigin src="./assets/index-CJ6ClDAb.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DsjZYrtK.css">
+    <script type="module" crossorigin src="./assets/index-CGOpgHD2.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-08enawDs.css">
   </head>
   <body>
     <div class="wrap">
@@ -304,15 +462,18 @@
         <div class="mark" style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#182a22,#0f1a16);border:1.5px solid var(--gold);color:var(--gold);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center">◈</div>
         <h2>GOD SPEED</h2>
       </div>
+      <div class="nav-scroll">
       <div class="navsec">⚡ Command</div>
       <div class="nav-item active" data-tab="overview"><span class="nic">🏠</span>Overview</div>
       <div class="nav-item" data-tab="chat"><span class="nic">💬</span>Chat</div>
       <div class="navsec">🧭 Intelligence</div>
       <div class="nav-item" data-tab="osint"><span class="nic">🔎</span>OSINT</div>
       <div class="nav-item" data-tab="ingest"><span class="nic">📥</span>Ingest</div>
+      <div class="nav-item" data-tab="memory"><span class="nic">🧠</span>Memory</div>
       <div class="navsec">🛠️ Engineering</div>
       <div class="nav-item" data-tab="pipelines"><span class="nic">🔗</span>Pipelines</div>
       <div class="nav-item" data-tab="agents"><span class="nic">🤖</span>Agents</div>
+      <div class="nav-item" data-tab="browser-agent"><span class="nic">🖱️</span>Browser Agent</div>
       <div class="nav-item" data-tab="logs"><span class="nic">📜</span>Logs</div>
       <div class="navsec">⚙️ Infrastructure</div>
       <div class="nav-item" data-tab="models"><span class="nic">🧠</span>Models</div>
@@ -321,7 +482,8 @@
       <div class="nav-item" data-tab="review"><span class="nic">✅</span>Review</div>
       <div class="nav-item" data-tab="settings"><span class="nic">⚙️</span>Settings</div>
       <div class="nav-item" data-tab="northlet" onclick="openNorthlet()"><span class="nic">🏛️</span>NorthLet ↗</div>
-      <div class="nav-live"><span class="dot" style="background:var(--brand-bright)"></span><span id="navLiveText">live</span></div>
+      </div>
+      <div class="nav-live"><span class="dot" style="background:var(--gold)"></span><span id="navLiveText">live</span></div>
     </nav>
   </body>
 </html>

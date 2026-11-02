@@ -20,6 +20,7 @@ import hashlib
 import hmac
 import json
 import os
+import secrets
 import time
 import urllib.error
 import urllib.parse
@@ -40,8 +41,38 @@ INIT_DATA_MAX_AGE_SECONDS = 24 * 60 * 60  # 24h
 ISSUED_TG_TOKENS = set()
 
 
-def _token_for(pin: str) -> str:
-    return hmac.new(pin.encode(), b"mini-app-v1", hashlib.sha256).hexdigest()
+def _auth_secret() -> str:
+    """HMAC key over the PIN, identical to the upstream local backend so tokens
+    minted here are accepted upstream (the local backend's require_auth uses the
+    same scheme). Returns '' if no PIN is configured (auth effectively open)."""
+    if not PIN:
+        return ""
+    return hmac.new(PIN.encode(), b"mini-app-auth-v1", hashlib.sha256).hexdigest()
+
+
+def _make_token() -> str:
+    """Mint a token in the upstream backend's format: nonce.signature.
+    Stateless — no server-side store; valid as long as the PIN secret matches."""
+    if not PIN:
+        return ""
+    secret = _auth_secret()
+    nonce = secrets.token_hex(8)
+    sig = hmac.new(secret.encode(), nonce.encode(), hashlib.sha256).hexdigest()
+    return f"{nonce}.{sig}"
+
+
+def _check_token(token: str) -> bool:
+    """Validate a token in the upstream backend's nonce.signature format."""
+    if not PIN or not token:
+        return False
+    try:
+        nonce, sig = token.split(".", 1)
+    except (ValueError, AttributeError):
+        return False
+    secret = _auth_secret()
+    expected = hmac.new(secret.encode(), nonce.encode(), hashlib.sha256).hexdigest()
+    return hmac.compare_digest(sig, expected)
+
 
 
 def _token_for_tg(user_id) -> str:
@@ -134,23 +165,11 @@ class Handler(SimpleHTTPRequestHandler):
         except Exception:
             return {}
 
-    def _authorized(self) -> bool:
-        # Open access only if no auth is configured at all (no PIN and no bot token).
-        if not PIN and not BOT_TOKEN:
-            return True
-        auth = self.headers.get("Authorization", "")
-        if not auth.startswith("Bearer "):
-            return False
-        token = auth[len("Bearer "):]
-        if PIN and hmac.compare_digest(token, _token_for(PIN)):
-            return True
-        if BOT_TOKEN and token in ISSUED_TG_TOKENS:
-            return True
-        return False
-
     def _proxy_api(self, path):
-        if not self._authorized():
-            return self._json({"error": "unauthorized"}, 401)
+        # The upstream local backend is the authoritative auth boundary: it
+        # enforces require_auth() per-endpoint (public: health/self/models/relay;
+        # gated: logs/services/settings/render-status/fleet). We forward the
+        # browser's Authorization header so the upstream can enforce that gate.
         if not RELAY_HTTP_URL:
             return self._json({"error": "backend_unreachable", "detail": "no_relay_configured"}, 503)
         method = self.command or "GET"
@@ -163,6 +182,11 @@ class Handler(SimpleHTTPRequestHandler):
             req = urllib.request.Request(RELAY_HTTP_URL + path, method=method, data=body)
             ctype = self.headers.get("Content-Type", "application/json")
             req.add_header("Content-Type", ctype)
+            # Forward the browser's Authorization (Bearer) header so the upstream
+            # local backend can enforce its own require_auth() gate.
+            auth = self.headers.get("Authorization")
+            if auth:
+                req.add_header("Authorization", auth)
             with urllib.request.urlopen(req, timeout=70) as r:
                 data = r.read()
                 self.send_response(r.status)
@@ -228,11 +252,11 @@ class Handler(SimpleHTTPRequestHandler):
         if self.path == "/api/auth":
             if not PIN:
                 # No PIN configured -> issue the (empty) open token.
-                return self._json({"token": _token_for(""), "pin_set": False})
+                return self._json({"token": "", "pin_set": False})
             body = self._read_body()
             provided = str(body.get("pin", ""))
             if hmac.compare_digest(provided, PIN):
-                return self._json({"token": _token_for(PIN), "pin_set": True})
+                return self._json({"token": _make_token(), "pin_set": True})
             return self._json({"error": "wrong_pin"}, 401)
         if self.path == "/api/auth/telegram":
             return self._handle_telegram_auth()

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0a0e0a" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -436,6 +436,47 @@
     .mem-item .mem-score { font-size:10px; font-weight:700; color:var(--brand-bright); flex:0 0 auto; }
     .mem-item .mem-ts { font-size:10px; color:var(--muted); font-family:monospace; }
     .mem-item .mem-text { font-size:12px; color:var(--text); line-height:1.45; word-break:break-word; }
+    
+    /* iPhone readability and touch layout; keep the existing Telegram app. */
+    @media (max-width: 600px) {
+      :root {
+        --ts-body: 16px; --ts-small: 14px; --ts-micro: 12px;
+        --ts-title: 22px; --ts-h2: 20px;
+      }
+      body { padding:calc(12px + var(--sat)) 12px calc(12px + var(--sab)); }
+      .wrap, #app { min-height:0; }
+      #app { height:auto; }
+      header { gap:8px; margin-bottom:10px; flex-shrink:0; }
+      header .logo { gap:8px; min-width:0; }
+      header .logo .mark { width:34px; height:34px; flex-shrink:0; }
+      header h1 { font-size:clamp(17px, 4.6vw, 22px); white-space:nowrap; }
+      header .badge { font-size:12px; padding:5px 8px; white-space:nowrap; }
+      #navToggle, .notif-bell { width:44px; height:44px; min-width:44px; }
+      .notif-bell { margin-left:0; }
+      .chat-wrap { height:100%; min-height:0; }
+      .chat-header { flex-shrink:0; padding:4px 4px 8px; }
+      .chat-header .ch-name { font-size:18px; }
+      .chat-header .ch-status { font-size:13px; }
+      .chat-tools { flex-shrink:0; flex-wrap:nowrap; padding:6px 0; }
+      .chat-model { min-height:44px; font-size:16px; max-width:calc(100% - 54px); }
+      .chat-clear { min-width:44px; min-height:44px; font-size:16px; }
+      .chat-chips { flex-shrink:0; flex-wrap:nowrap; overflow-x:auto; padding:2px 0 8px; }
+      .chat-chip { flex-shrink:0; min-height:44px; padding:8px 12px; font-size:14px; }
+      .chat-log { min-height:0; padding:6px 0; gap:12px; }
+      .chat-msg { max-width:94%; padding:12px 14px; font-size:17px; line-height:1.55; }
+      .chat-msg .cm-model, .cm-model { font-size:12px; line-height:1.4; overflow-wrap:anywhere; }
+      .chat-msg .cm-time { font-size:12px; line-height:1.4; }
+      .chat-msg.bot .md-code, .chat-msg.bot .md-pre { font-size:14px; }
+      .chat-hint { font-size:14px; }
+      .chat-input-row { flex-shrink:0; align-items:flex-end; padding-top:8px; }
+      .chat-input { min-width:0; min-height:48px; font-size:17px; line-height:1.4; }
+      .chat-send { width:48px; height:48px; font-size:20px; }
+      input, select, textarea, .fld input, .fld select, .fld textarea { font-size:16px; }
+      button, .btn-mini, .nav-item, .quick, .chat-retry { min-height:44px; }
+      .card .row, .svc-item, .fld, .fl-title, .mem-item .mem-text { font-size:16px; }
+      .card h3, .tile .label, .hero .hs, .nav-live, .model-chip .mc-id { font-size:14px; }
+      .model-chip .mc-created, .model-chip .mc-owned, .mem-item .mem-ts, .fl-ts { font-size:12px; }
+    }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script type="module" crossorigin src="./assets/index-CGOpgHD2.js?v=ccb23605cd94"></script>

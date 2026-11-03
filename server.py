@@ -31,6 +31,7 @@ from pathlib import Path
 FRONTEND_DIR = Path(__file__).parent / "frontend" / "dist"
 PORT = int(os.environ.get("PORT", "10000"))
 RELAY_HTTP_URL = os.environ.get("RELAY_HTTP_URL", "").rstrip("/")
+RELAY_HTTP_TOKEN = os.environ.get("RELAY_HTTP_TOKEN", "")
 PIN = os.environ.get("MINI_APP_PIN", "")
 BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
 
@@ -172,6 +173,8 @@ class Handler(SimpleHTTPRequestHandler):
         # browser's Authorization header so the upstream can enforce that gate.
         if not RELAY_HTTP_URL:
             return self._json({"error": "backend_unreachable", "detail": "no_relay_configured"}, 503)
+        if not RELAY_HTTP_TOKEN:
+            return self._json({"error": "backend_unreachable", "detail": "no_relay_credential"}, 503)
         method = self.command or "GET"
         try:
             body = None
@@ -180,6 +183,8 @@ class Handler(SimpleHTTPRequestHandler):
                 if length > 0 and length <= 64 * 1024:
                     body = self.rfile.read(length)
             req = urllib.request.Request(RELAY_HTTP_URL + path, method=method, data=body)
+            # Server-side credential only; never accept it from browser headers.
+            req.add_header("X-Relay-Token", RELAY_HTTP_TOKEN)
             ctype = self.headers.get("Content-Type", "application/json")
             req.add_header("Content-Type", ctype)
             # Forward the browser's Authorization (Bearer) header so the upstream

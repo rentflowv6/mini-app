@@ -478,9 +478,17 @@
       .card h3, .tile .label, .hero .hs, .nav-live, .model-chip .mc-id { font-size:14px; }
       .model-chip .mc-created, .model-chip .mc-owned, .mem-item .mem-ts, .fl-ts { font-size:12px; }
     }
+
+      /* Copy the reply alone, with an iPhone-sized touch target. */
+      .chat-copy { display:block; min-width:44px; min-height:44px; margin-top:6px; padding:8px 10px;
+        border:1px solid var(--border); border-radius:8px; background:var(--card); color:var(--muted);
+        font:inherit; font-size:13px; cursor:pointer; touch-action:manipulation; user-select:none; -webkit-user-select:none; }
+      .chat-copy:active { background:var(--card2); }
+      .chat-copy:focus-visible { outline:2px solid var(--brand-bright); outline-offset:2px; }
+      .chat-copy:disabled { opacity:.6; cursor:wait; }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script type="module" crossorigin src="./assets/index-CGOpgHD2.js?v=iphone-bottom-20261103"></script>
+    <script type="module" crossorigin src="./assets/index-CGOpgHD2.js?v=reply-copy-20261103"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-08enawDs.css">
   </head>
   <body>
@@ -529,3 +537,4 @@
     </nav>
   </body>
 </html>
+
